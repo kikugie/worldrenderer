@@ -1,72 +1,133 @@
 plugins {
-    id 'fabric-loom' version '1.4-SNAPSHOT'
-    id 'maven-publish'
+    id "fabric-loom" version "1.4-SNAPSHOT"
+    id "maven-publish"
+    id "me.modmuss50.mod-publish-plugin" version "0.4.+"
 }
 
-version = "${project.mod_version}+${project.minecraft_base_version}"
-group = project.maven_group
+archivesBaseName = property("mod.name")
+version = "${property("mod.version")}+${stonecutter.current().version()}"
+group = property("mod.maven_group")
 
-loom {
-    accessWidenerPath = file("src/main/resources/worldmesher.accesswidener")
+base {
+    archivesName = archivesBaseName
+}
+
+repositories {
+    maven { url = "https://jitpack.io" }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Curseforge"
+                url = "https://www.cursemaven.com"
+            }
+        }
+        filter {
+            includeGroup "curse.maven"
+        }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 dependencies {
-    //to change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    minecraft "com.mojang:minecraft:${stonecutter.current().version()}"
+    mappings "net.fabricmc:yarn:${property("deps.yarn")}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${property("deps.fabric_loader")}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}"
 }
 
-processResources {
-    inputs.property "version", project.version
-    inputs.property "fabric_api_version", project.fabric_version
+def target = ">=${project.property("mod.min_target")}- <=${project.property("mod.max_target")}"
 
+processResources {
     filesMatching("fabric.mod.json") {
-        expand "version": project.version, "fabric_api_version": project.fabric_version
+        expand "id": archivesBaseName,
+                "display": project.property("mod.display"),
+                "mod_version": version,
+                "target_minecraft": target
     }
+}
+
+loom {
+    accessWidenerPath = getRootProject().file("src/main/resources/worldrenderer.accesswidener")
 }
 
 tasks.withType(JavaCompile).configureEach {
     it.options.release = 17
 }
 
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
 java {
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
     withSourcesJar()
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
 }
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.base.archivesName.get()}"}
+        rename { "${it}_${project.base.archivesName.get()}" }
     }
 }
 
-def ENV = System.getenv();
+// configure the maven publication
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
+    repositories {
+        maven {
+            name = "kikugieMaven"
+            url = "https://maven.kikugie.dev/releases"
+            credentials(PasswordCredentials)
+            authentication {
+                basic(BasicAuthentication)
+            }
         }
     }
 
-    // select the repositories you want to publish to
-    repositories {
-        // uncomment to publish to the local maven
-        // mavenLocal()
-        maven {
-            url ENV.MAVEN_URL
-            credentials {
-                username ENV.MAVEN_USER
-                password ENV.MAVEN_PASSWORD
-            }
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = "${group}.${archivesBaseName}"
+            artifactId = property("mod.version")
+            version = stonecutter.current().version()
+
+            from components.java
         }
+    }
+}
+
+// Create a task to collect the completed jars in the root project"s build/libs folder.
+def collectJars = tasks.register("collectJars", Copy) { copy ->
+
+    def task = tasks.named("remapJar")
+
+    dependsOn(task)
+
+    copy.from task
+    copy.into rootProject.buildDir.path + "/libs"
+}
+
+// Set up assemble to depend on the collectJars task, so it gets run on build.
+assemble {
+    dependsOn(collectJars)
+}
+
+if (stonecutter.current().isActiveVersion()) {
+    loom.runConfigs.server.ideConfigGenerated = true
+
+    rootProject.tasks.register("buildActive") {
+        setGroup "project"
+
+        dependsOn tasks.named("build")
     }
 }

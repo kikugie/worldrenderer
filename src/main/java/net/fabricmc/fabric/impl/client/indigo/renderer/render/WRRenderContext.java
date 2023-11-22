@@ -19,12 +19,12 @@ import net.minecraft.world.BlockRenderView;
 import java.util.function.Function;
 
 @SuppressWarnings("UnstableApiUsage")
-public class WorldMesherRenderContext extends AbstractBlockRenderContext {
+public class WRRenderContext extends AbstractBlockRenderContext {
 
     private final BlockRenderView blockView;
     private final Function<RenderLayer, VertexConsumer> bufferFunc;
 
-    public WorldMesherRenderContext(BlockRenderView blockView, Function<RenderLayer, VertexConsumer> bufferFunc) {
+    public WRRenderContext(BlockRenderView blockView, Function<RenderLayer, VertexConsumer> bufferFunc) {
         this.blockView = blockView;
         this.bufferFunc = bufferFunc;
 
@@ -40,11 +40,11 @@ public class WorldMesherRenderContext extends AbstractBlockRenderContext {
             this.matrix = matrixStack.peek().getPositionMatrix();
             this.normalMatrix = matrixStack.peek().getNormalMatrix();
 
-            blockInfo.recomputeSeed = true;
+            this.blockInfo.recomputeSeed = true;
 
-            aoCalc.clear();
-            blockInfo.prepareForBlock(blockState, blockPos, model.useAmbientOcclusion());
-            model.emitBlockQuads(blockInfo.blockView, blockInfo.blockState, blockInfo.blockPos, blockInfo.randomSupplier, this);
+            this.aoCalc.clear();
+            this.blockInfo.prepareForBlock(blockState, blockPos, model.useAmbientOcclusion());
+            model.emitBlockQuads(this.blockInfo.blockView, this.blockInfo.blockState, this.blockInfo.blockPos, this.blockInfo.randomSupplier, this);
         } catch (Throwable throwable) {
             CrashReport crashReport = CrashReport.create(throwable, "Tessellating block in WorldMesher mesh");
             CrashReportSection crashReportSection = crashReport.addElement("Block being tessellated");
@@ -58,12 +58,12 @@ public class WorldMesherRenderContext extends AbstractBlockRenderContext {
         return new AoCalculator(blockInfo) {
             @Override
             public int light(BlockPos pos, BlockState state) {
-                return WorldRenderer.getLightmapCoordinates(WorldMesherRenderContext.this.blockView, state, pos);
+                return WorldRenderer.getLightmapCoordinates(WRRenderContext.this.blockView, state, pos);
             }
 
             @Override
             public float ao(BlockPos pos, BlockState state) {
-                return AoLuminanceFix.INSTANCE.apply(WorldMesherRenderContext.this.blockView, pos, state);
+                return AoLuminanceFix.INSTANCE.apply(WRRenderContext.this.blockView, pos, state);
             }
         };
     }

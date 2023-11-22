@@ -1,4 +1,4 @@
-package io.wispforest.worldmesher.renderers;
+package dev.kikugie.worldrenderer.util;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -17,26 +17,26 @@ import net.minecraft.world.BlockRenderView;
 import java.util.BitSet;
 import java.util.List;
 
-public class WorldMesherBlockModelRenderer extends BlockModelRenderer {
+public class WRBlockModelRenderer extends BlockModelRenderer {
 
     private static final Direction[] DIRECTIONS = Direction.values();
     private byte cullingOverrides = 0;
 
-    public WorldMesherBlockModelRenderer() {
+    public WRBlockModelRenderer() {
         super(MinecraftClient.getInstance().getBlockColors());
     }
 
     public void setCullDirection(Direction direction, boolean alwaysDraw) {
         if (!alwaysDraw) return;
-        cullingOverrides |= (1 << direction.getId());
+        this.cullingOverrides |= (byte) (1 << direction.getId());
     }
 
     public void clearCullingOverrides() {
-        cullingOverrides = 0;
+        this.cullingOverrides = 0;
     }
 
     private boolean shouldAlwaysDraw(Direction direction) {
-        return (cullingOverrides & (1 << direction.getId())) != 0;
+        return (this.cullingOverrides & (1 << direction.getId())) != 0;
     }
 
     @Override

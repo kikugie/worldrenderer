@@ -1,31 +1,25 @@
 {
   "schemaVersion": 1,
-  "id": "worldmesher",
-  "version": "${version}",
-  "name": "Worldmesher",
+  "id": "${id}",
+  "version": "${mod_version}",
+  "name": "${display}",
   "description": "",
   "authors": [
+    "KikuGie",
     "glisco"
   ],
-  "contact": {},
-  "license": "MIT",
-  "environment": "*",
-  "icon": "assets/worldmesher/icon.png",
-  "accessWidener": "worldmesher.accesswidener",
-  "mixins": [
-    "worldmesher.mixins.json"
-  ],
-  "custom": {
-    "modmenu": {
-      "badges": [
-        "library"
-      ]
-    },
-    "worldmesher:fabric_api_build_version": "${fabric_api_version}"
+  "contact": {
   },
+  "license": "MIT",
+  "icon": "assets/worldrenderer/icon.png",
+  "environment": "client",
+  "entrypoints": {
+  },
+  "mixins": [
+    "worldrenderer.mixins.json"
+  ],
   "depends": {
-    "fabricloader": ">=0.11.3",
-    "fabric": ">=0.85.0",
-    "minecraft": ">=1.19.3"
+    "minecraft": "${target_minecraft}",
+    "fabric-api": "*"
   }
 }

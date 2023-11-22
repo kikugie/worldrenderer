@@ -1,4 +1,4 @@
-package io.wispforest.worldmesher.mixin;
+package dev.kikugie.worldrenderer.mixin;
 
 import net.minecraft.client.render.BufferBuilder;
 import org.spongepowered.asm.mixin.Mixin;
@@ -9,8 +9,8 @@ import java.nio.ByteBuffer;
 @Mixin(BufferBuilder.class)
 public interface BufferBuilderAccessor {
     @Accessor("buffer")
-    ByteBuffer worldmesher$getBuffer();
+    ByteBuffer worldrenderer$getBuffer();
 
     @Accessor("buffer")
-    void worldmesher$setBuffer(ByteBuffer buffer);
+    void worldrenderer$setBuffer(ByteBuffer buffer);
 }

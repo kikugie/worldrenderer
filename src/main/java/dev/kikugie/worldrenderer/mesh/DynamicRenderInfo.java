@@ -1,4 +1,4 @@
-package io.wispforest.worldmesher;
+package dev.kikugie.worldrenderer.mesh;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
@@ -22,11 +22,11 @@ public class DynamicRenderInfo {
         this.entities = ImmutableMultimap.copyOf(entities);
     }
 
-    public Map<BlockPos, BlockEntity> blockEntities() {
+    public Map<BlockPos, BlockEntity> getBlockEntities() {
         return this.blockEntities;
     }
 
-    public Multimap<Vec3d, EntityEntry> entities() {
+    public Multimap<Vec3d, EntityEntry> getEntities() {
         return this.entities;
     }
 

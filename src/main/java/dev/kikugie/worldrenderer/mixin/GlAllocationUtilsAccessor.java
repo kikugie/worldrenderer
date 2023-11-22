@@ -1,4 +1,4 @@
-package io.wispforest.worldmesher.mixin;
+package dev.kikugie.worldrenderer.mixin;
 
 import net.minecraft.client.util.GlAllocationUtils;
 import org.lwjgl.system.MemoryUtil;
@@ -9,8 +9,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface GlAllocationUtilsAccessor {
 
     @Accessor("ALLOCATOR")
-    static MemoryUtil.MemoryAllocator worldmesher$getAllocator() {
+    static MemoryUtil.MemoryAllocator worldrenderer$getAllocator() {
         throw new UnsupportedOperationException();
     }
 
 }
+
