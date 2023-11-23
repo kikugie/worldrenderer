@@ -12,7 +12,6 @@ import dev.kikugie.worldrenderer.mesh.WorldMesh;
 import dev.kikugie.worldrenderer.mesh.WorldMeshBuilder;
 import dev.kikugie.worldrenderer.property.DefaultRenderProperties;
 import dev.kikugie.worldrenderer.render.AreaRenderable;
-import dev.kikugie.worldrenderer.render.RenderableDispatcher;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
@@ -32,18 +31,23 @@ public class RenderCommand {
 
     private static int render(CommandContext<ServerCommandSource> context) {
         ServerWorld world = context.getSource().getWorld();
-        Optional<DummyWorld> optional = StructureLoader.createWorld(world, context.getArgument("id", Identifier.class));
-        if (optional.isPresent()) {
-            DummyWorld dummy = optional.get();
-            WorldMeshBuilder builder = WorldMesh.builder(dummy, dummy.getMin(), dummy.getMax());
-            builder.setEntitySupplier(dummy);
-            WorldMesh mesh = builder.build();
-            mesh.scheduleRebuild();
+        try {
+            Optional<DummyWorld> optional = StructureLoader.createWorld(world, context.getArgument("id", Identifier.class));
+            if (optional.isPresent()) {
+                DummyWorld dummy = optional.get();
+                WorldMeshBuilder builder = WorldMesh.builder(dummy, dummy.getMin(), dummy.getMax());
+                builder.setEntitySupplier(dummy);
+                WorldMesh mesh = builder.build();
+                mesh.scheduleRebuild();
 
-            AreaRenderable renderable = new AreaRenderable(mesh, new DefaultRenderProperties(500, 45, 30));
-            MinecraftClient client = MinecraftClient.getInstance();
-            RenderSystem.recordRenderCall(() -> client.setScreen(new RenderScreen(Text.of("Render"), renderable)));
+                AreaRenderable renderable = new AreaRenderable(mesh, new DefaultRenderProperties(500, 45, 30));
+                MinecraftClient client = MinecraftClient.getInstance();
+                RenderSystem.recordRenderCall(() -> client.setScreen(new RenderScreen(Text.of("Render"), renderable)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return 0;
     }
 }

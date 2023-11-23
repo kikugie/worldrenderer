@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class WorldMeshBuilder {
     private final BlockRenderView world;
     private final BlockPos origin;

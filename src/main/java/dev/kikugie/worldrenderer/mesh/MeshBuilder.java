@@ -182,7 +182,7 @@ public final class MeshBuilder {
             BlockPos renderPos = pos.subtract(this.origin);
             BlockEntity blockEntity = this.world.getBlockEntity(pos);
             if (blockEntity != null)
-                this.blockEntities.put(pos, blockEntity);
+                this.blockEntities.put(pos.toImmutable(), blockEntity);
 
             if (!this.world.getFluidState(pos).isEmpty()) {
                 var fluidState = this.world.getFluidState(pos);
