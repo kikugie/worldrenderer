@@ -1,5 +1,6 @@
 package dev.kikugie.worldrenderer.mesh;
 
+import dev.kikugie.worldrenderer.util.EntitiesSupplier;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -13,7 +14,7 @@ public class WorldMeshBuilder {
     private final BlockRenderView world;
     private final BlockPos origin;
     private final BlockPos end;
-    private Supplier<List<Entity>> entitySupplier = Collections::emptyList;
+    private EntitiesSupplier entitySupplier = Collections::emptyList;
     private Runnable preRender = () -> {};
     private Runnable postRender = () -> {};
     private Vec3d camera = new Vec3d(1000.0, 0, 0);
@@ -24,7 +25,7 @@ public class WorldMeshBuilder {
         this.end = end;
     }
 
-    public void setEntitySupplier(Supplier<List<Entity>> entitySupplier) {
+    public void setEntitySupplier(EntitiesSupplier entitySupplier) {
         this.entitySupplier = entitySupplier;
     }
 

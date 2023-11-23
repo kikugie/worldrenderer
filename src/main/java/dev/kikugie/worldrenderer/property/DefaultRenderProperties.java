@@ -52,7 +52,7 @@ public class DefaultRenderProperties implements RenderPropertyBundle {
 
     @Override
     public void applyToViewMatrix(MatrixStack modelViewStack) {
-        final float scale = (float) (this.scale.get() / 100d);
+        final float scale = (float) (this.scale.get() / 1000d);
         modelViewStack.scale(scale, scale, scale);
 
         modelViewStack.translate(this.xOffset.get() / 26000d, this.yOffset.get() / -26000d, 0);

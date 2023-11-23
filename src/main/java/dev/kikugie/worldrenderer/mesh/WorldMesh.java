@@ -2,6 +2,7 @@ package dev.kikugie.worldrenderer.mesh;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.kikugie.worldrenderer.Reference;
+import dev.kikugie.worldrenderer.util.EntitiesSupplier;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -25,7 +26,7 @@ public class WorldMesh {
     private final BlockRenderView world;
     private final BlockPos origin;
     private final BlockPos end;
-    private final Supplier<List<Entity>> entitySupplier;
+    private final EntitiesSupplier entitySupplier;
     private final Runnable preRender;
     private final Runnable postRender;
     private final Vec3d camera;
@@ -35,7 +36,7 @@ public class WorldMesh {
     private MeshBuilder builder = null;
     private MeshState state = MeshState.NEW;
 
-    public WorldMesh(BlockRenderView world, BlockPos origin, BlockPos end, Vec3d camera, Supplier<List<Entity>> entitySupplier, Runnable preRender, Runnable postRender) {
+    public WorldMesh(BlockRenderView world, BlockPos origin, BlockPos end, Vec3d camera, EntitiesSupplier entitySupplier, Runnable preRender, Runnable postRender) {
         this.world = world;
         this.origin = origin;
         this.end = end;

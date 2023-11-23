@@ -58,10 +58,32 @@ processResources {
 
 loom {
     accessWidenerPath = getRootProject().file("src/main/resources/worldrenderer.accesswidener")
+    loom.runConfigs.client.ideConfigGenerated = true
+
+    runConfigs.all {
+        vmArgs "-Dmixin.debug.export=true"
+    }
+}
+
+sourceSets {
+    test {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+    }
+}
+
+loom {
+    runs {
+        testClient {
+            client()
+            name = "Testmod Client"
+            source sourceSets.test
+        }
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 17
+    it.options.release = 16
 }
 
 tasks.withType(AbstractArchiveTask).configureEach {
@@ -123,8 +145,6 @@ assemble {
 }
 
 if (stonecutter.current().isActiveVersion()) {
-    loom.runConfigs.server.ideConfigGenerated = true
-
     rootProject.tasks.register("buildActive") {
         setGroup "project"
 

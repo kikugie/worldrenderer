@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.VertexSorter;
 import dev.kikugie.worldrenderer.Reference;
 import dev.kikugie.worldrenderer.mixin.BufferBuilderAccessor;
 import dev.kikugie.worldrenderer.mixin.GlAllocationUtilsAccessor;
+import dev.kikugie.worldrenderer.util.EntitiesSupplier;
 import dev.kikugie.worldrenderer.util.WRBlockModelRenderer;
 import dev.kikugie.worldrenderer.util.WRFluidRenderer;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
@@ -20,7 +21,6 @@ import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 /**
  * This class is responsible for building meshes for rendering in Minecraft.
@@ -58,7 +57,7 @@ public final class MeshBuilder {
     private final BlockPos origin;
     private final BlockPos end;
     private final Vec3d camera;
-    private final Supplier<List<Entity>> entitySupplier;
+    private final EntitiesSupplier entitySupplier;
 
     private final CompletableFuture<Void> future;
     private double progress = 0.0;
@@ -66,13 +65,13 @@ public final class MeshBuilder {
     private DynamicRenderInfo renderInfo = null;
 
     /**
-     * Private because launches the build upon instantiating, use {@link MeshBuilder#launch(BlockRenderView, BlockPos, BlockPos, Vec3d, Supplier, Executor, BiConsumer)})}
+     * Private because launches the build upon instantiating, use {@link MeshBuilder#launch(BlockRenderView, BlockPos, BlockPos, Vec3d, EntitiesSupplier, Executor, BiConsumer)})}
      */
     private MeshBuilder(BlockRenderView world,
                         BlockPos origin,
                         BlockPos end,
                         Vec3d camera,
-                        Supplier<List<Entity>> entitySupplier,
+                        EntitiesSupplier entitySupplier,
                         Executor executor,
                         BiConsumer<MeshBuilder, @Nullable Throwable> onComplete) {
         this.world = world;
@@ -101,7 +100,7 @@ public final class MeshBuilder {
                                      BlockPos origin,
                                      BlockPos end,
                                      Vec3d camera,
-                                     Supplier<List<Entity>> entitySupplier,
+                                     EntitiesSupplier entitySupplier,
                                      Executor executor,
                                      BiConsumer<MeshBuilder, @Nullable Throwable> onComplete) {
         return new MeshBuilder(world, origin, end, camera, entitySupplier, executor, onComplete);
@@ -225,7 +224,7 @@ public final class MeshBuilder {
 
     private CompletableFuture<List<DynamicRenderInfo.EntityEntry>> processEntities() {
         CompletableFuture<List<DynamicRenderInfo.EntityEntry>> entitiesFuture = new CompletableFuture<>();
-        this.client.execute(() -> entitiesFuture.complete(this.entitySupplier.get()
+        this.client.execute(() -> entitiesFuture.complete(this.entitySupplier.getEntities()
                 .stream()
                 .map(entity -> {
 //                    if (this.freezeEntities) {
