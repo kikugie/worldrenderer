@@ -58,11 +58,6 @@ processResources {
 
 loom {
     accessWidenerPath = getRootProject().file("src/main/resources/worldrenderer.accesswidener")
-    loom.runConfigs.client.ideConfigGenerated = true
-
-    runConfigs.all {
-        vmArgs "-Dmixin.debug.export=true"
-    }
 }
 
 sourceSets {
@@ -72,12 +67,21 @@ sourceSets {
     }
 }
 
-loom {
-    runs {
-        testClient {
-            client()
-            name = "Testmod Client"
-            source sourceSets.test
+if (stonecutter.current().isActiveVersion()) {
+    loom {
+        runs {
+            testClient {
+                client()
+                name = "Testmod Client"
+                source sourceSets.test
+            }
+        }
+
+        runConfigs.client.ideConfigGenerated = true
+
+        runConfigs.all {
+            vmArgs "-Dmixin.debug.export=true"
+            runDir "../../run"
         }
     }
 }

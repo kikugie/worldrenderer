@@ -1,13 +1,14 @@
 package dev.kikugie.worldrenderer.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.systems.VertexSorter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import java.util.function.Consumer;
+
+/*?>=1.20 {?*//*import com.mojang.blaze3d.systems.VertexSorter;*//*?}?*/
 
 public class RenderableDispatcher {
     @SuppressWarnings("deprecation")
@@ -31,7 +32,7 @@ public class RenderableDispatcher {
         // Unproject to get the camera position for vertex sorting
         var camPos = new Vector4f(0, 0, 0, 1);
         camPos.mul(new Matrix4f(projectionMatrix).invert()).mul(new Matrix4f(modelViewStack.peek().getPositionMatrix()).invert());
-        RenderSystem.setProjectionMatrix(projectionMatrix, VertexSorter.byDistance(-camPos.x, -camPos.y, -camPos.z));
+        RenderSystem.setProjectionMatrix(projectionMatrix /*?>=1.20 {?*//*, VertexSorter.byDistance(-camPos.x, -camPos.y, -camPos.z)*//*?}?*/);
 
         RenderSystem.runAsFancy(() -> {
             renderable.emitVertices(

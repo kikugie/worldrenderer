@@ -32,11 +32,13 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.world.biome.ColorResolver;
 import net.minecraft.world.chunk.ChunkManager;
 import net.minecraft.world.chunk.light.LightingProvider;
 import net.minecraft.world.entity.EntityLookup;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.tick.QueryableTickScheduler;
+import net.minecraft.world.tick.TickPriority;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -276,5 +278,30 @@ public class DummyWorld extends World implements EntitiesSupplier, ServerWorldAc
     @Override
     public FeatureSet getEnabledFeatures() {
         return FeatureFlags.DEFAULT_ENABLED_FEATURES;
+    }
+
+    @Override
+    public void scheduleBlockTick(BlockPos pos, Block block, int delay) {
+
+    }
+
+    @Override
+    public void scheduleBlockTick(BlockPos pos, Block block, int delay, TickPriority priority) {
+
+    }
+
+    @Override
+    public void scheduleFluidTick(BlockPos pos, Fluid fluid, int delay) {
+
+    }
+
+    @Override
+    public void scheduleFluidTick(BlockPos pos, Fluid fluid, int delay, TickPriority priority) {
+
+    }
+
+    @Override
+    public int getColor(BlockPos pos, ColorResolver colorResolver) {
+        return colorResolver.getColor(biome.value(), pos.getX(), pos.getZ());
     }
 }

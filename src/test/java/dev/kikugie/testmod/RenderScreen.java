@@ -2,7 +2,6 @@ package dev.kikugie.testmod;
 
 import dev.kikugie.worldrenderer.render.Renderable;
 import dev.kikugie.worldrenderer.render.RenderableDispatcher;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
@@ -15,10 +14,19 @@ public class RenderScreen extends Screen {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(
+            /*?>=1.20 {?*//*
+            net.minecraft.client.gui.DrawContext context,
+            *//*} else {*/
+            net.minecraft.client.util.math.MatrixStack context,
+            /*?}?*/
+            int mouseX,
+            int mouseY,
+            float delta) {
         super.render(context, mouseX, mouseY, delta);
         float ratio = width / (float) height;
 
-        RenderableDispatcher.draw(renderable, ratio, client.getTickDelta(), $ -> {});
+        RenderableDispatcher.draw(renderable, ratio, client.getTickDelta(), $ -> {
+        });
     }
 }

@@ -2,7 +2,6 @@ package dev.kikugie.worldrenderer.mesh;
 
 import com.google.common.collect.HashMultimap;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.systems.VertexSorter;
 import dev.kikugie.worldrenderer.Reference;
 import dev.kikugie.worldrenderer.mixin.BufferBuilderAccessor;
 import dev.kikugie.worldrenderer.mixin.GlAllocationUtilsAccessor;
@@ -35,6 +34,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BiConsumer;
+
+/*?>=1.20 {?*//*import com.mojang.blaze3d.systems.VertexSorter;*//*?}?*/
 
 /**
  * This class is responsible for building meshes for rendering in Minecraft.
@@ -133,7 +134,7 @@ public final class MeshBuilder {
             this.vertexStorage.clear();
 
             this.builderStorage.forEach((renderLayer, bufferBuilder) -> {
-                var newBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
+                var newBuffer = new VertexBuffer(/*?>=1.20 {?*//*VertexBuffer.Usage.STATIC*//*?}?*/);
 
                 newBuffer.bind();
                 newBuffer.upload(bufferBuilder.end());
@@ -158,11 +159,17 @@ public final class MeshBuilder {
     private void sortTranslucent() {
         if (this.builderStorage.containsKey(RenderLayer.getTranslucent())) {
             var translucentBuilder = this.builderStorage.get(RenderLayer.getTranslucent());
-
+            /*?>=1.20 {?*//*
             translucentBuilder.setSorter(VertexSorter.byDistance(
                     (float) this.camera.x - this.origin.getX(),
                     (float) this.camera.y - this.origin.getY(),
-                    (float) this.camera.z - this.origin.getZ()));
+                    (float) this.camera.z - this.origin.getZ())); */
+            /*?} else {?*/
+            translucentBuilder.sortFrom(
+                    (float) this.camera.x - this.origin.getX(),
+                    (float) this.camera.y - this.origin.getY(),
+                    (float) this.camera.z - this.origin.getZ());
+            /*?}?*/
         }
     }
 
