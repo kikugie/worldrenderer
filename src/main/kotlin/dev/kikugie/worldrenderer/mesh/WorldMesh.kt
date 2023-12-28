@@ -12,6 +12,7 @@ import net.minecraft.world.BlockRenderView
 import org.joml.Matrix4f
 import java.util.concurrent.Executor
 
+@Suppress("unused")
 class WorldMesh(
     val world: BlockRenderView,
     val origin: BlockPos,

@@ -2,7 +2,7 @@ package dev.kikugie.worldrenderer.mesh
 
 import com.google.common.collect.HashMultimap
 import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.systems.VertexSorter
+import dev.kikugie.worldrenderer.Reference
 import dev.kikugie.worldrenderer.mixin.BufferBuilderAccessor
 import dev.kikugie.worldrenderer.mixin.GlAllocationUtilsAccessor
 import dev.kikugie.worldrenderer.util.EntitySupplier
@@ -63,13 +63,13 @@ class WorldMeshBuilder internal constructor(
     } catch (e: Throwable) {
         val fapi = FabricLoader.getInstance().getModContainer("worldrenderer")
             .get().metadata.getCustomValue("worldrenderer:fapi_build_version").asString
-//        Reference.LOGGER.error(
-//            """
-//            Could not create a context for rendering Fabric API models.
-//            This is most likely due to an incompatible Fabric API version -
-//            this build of WorldRenderer was compiled against $fapi, try that instead
-//        """.trimIndent()
-//        )
+        Reference.LOGGER.error(
+            """
+            Could not create a context for rendering Fabric API models.
+            This is most likely due to an incompatible Fabric API version -
+            this build of WorldRenderer was compiled against $fapi, try that instead
+        """.trimIndent()
+        )
         null
     }
 
@@ -146,7 +146,7 @@ class WorldMeshBuilder internal constructor(
 
             val layer = RenderLayers.getBlockLayer(state)
             val model = renderManager.getModel(state)
-            if (context != null && (model as FabricBakedModel).isVanillaAdapter) {
+            if (context != null && !(model as FabricBakedModel).isVanillaAdapter) {
                 context.tessellateBlock(world, state, pos, model, matrices)
             } else if (state.renderType == BlockRenderType.MODEL) {
                 blockRenderer.render(
@@ -170,7 +170,7 @@ class WorldMeshBuilder internal constructor(
     private fun sortTranslucent() {
         if (builderStorage.containsKey(RenderLayer.getTranslucent())) {
             val translucentBuilder = builderStorage[RenderLayer.getTranslucent()]
-            /*? if >=1.20 {*/
+            /*? if >=1.20 {*//*
             translucentBuilder?.setSorter(
                 VertexSorter.byDistance(
                     camera.x.toFloat() - origin.x,
@@ -178,13 +178,13 @@ class WorldMeshBuilder internal constructor(
                     camera.z.toFloat() - origin.z
                 )
             )
-            /*?} else {*//*
+            *//*?} else {*/
             translucentBuilder?.sortFrom(
                 camera.x.toFloat() - origin.x,
                 camera.y.toFloat() - origin.y,
                 camera.z.toFloat() - origin.z
             )
-            *//*?} */
+            /*?} */
         }
     }
 
@@ -193,7 +193,7 @@ class WorldMeshBuilder internal constructor(
             vertexStorage.values.forEach { it.close() }
             vertexStorage.clear()
             builderStorage.forEach { (layer: RenderLayer, builder: BufferBuilder) ->
-                val newBuffer = VertexBuffer(/*?if >=1.20 {*/VertexBuffer.Usage.STATIC/*?} */)
+                val newBuffer = VertexBuffer(/*?if >=1.20 {*//*VertexBuffer.Usage.STATIC*//*?} */)
                 newBuffer.bind()
                 newBuffer.upload(builder.end())
                 GlAllocationUtilsAccessor.`worldrenderer$getAllocator`().free(

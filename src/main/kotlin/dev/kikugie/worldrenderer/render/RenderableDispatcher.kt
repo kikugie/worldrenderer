@@ -1,14 +1,15 @@
 package dev.kikugie.worldrenderer.render
 
 import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.systems.VertexSorter
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.math.MatrixStack
 import org.joml.Matrix4f
 import org.joml.Vector4f
 import java.util.function.Consumer
 
+
 object RenderableDispatcher {
+    @Suppress("DEPRECATION")
     fun draw(renderable: Renderable, aspectRatio: Float, tickDelta: Float, transformer: Consumer<MatrixStack?>) {
         renderable.prepare()
 
@@ -23,7 +24,7 @@ object RenderableDispatcher {
             val projectionMatrix = Matrix4f().setOrtho(-aspectRatio, aspectRatio, -1f, 1f, -1000f, 3000f)
 
             // Unproject to get the camera position for vertex sorting
-            val camPos = Vector4f(0f, 0f, 0f, 1f).also {
+            Vector4f(0f, 0f, 0f, 1f).also {
                 it.mul(Matrix4f(projectionMatrix).invert()).mul(Matrix4f(peek().positionMatrix).invert())
                 val inverted = Matrix4f(projectionMatrix)
                 inverted.invert()
@@ -33,7 +34,11 @@ object RenderableDispatcher {
                 it.mul(model)
             }
 
-            RenderSystem.setProjectionMatrix(projectionMatrix, VertexSorter.byDistance(-camPos.x, -camPos.y, -camPos.z))
+            RenderSystem.setProjectionMatrix(
+                projectionMatrix,
+                /*? if >=1.20 */
+                /*com.mojang.blaze3d.systems.VertexSorter.byDistance(-camPos.x, -camPos.y, -camPos.z)*/
+            )
             RenderSystem.runAsFancy {
                 renderable.emitVertices(
                     MatrixStack(),

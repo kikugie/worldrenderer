@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate", "unused", "CanBeParameter")
+
 package dev.kikugie.worldrenderer.property
 
 abstract class Property<T>(val defaultValue: T) : () -> T {

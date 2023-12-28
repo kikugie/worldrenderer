@@ -12,6 +12,10 @@ val modId = property("mod.name").toString()
 val modVersion = property("mod.version").toString()
 val target = ">=${property("mod.min_target")}- <=${property("mod.max_target")}"
 
+base {
+    archivesName = modId
+}
+
 repositories {
     exclusiveContent {
         forRepository { maven("https://api.modrinth.com/maven") { name = "Modrinth" } }
@@ -67,11 +71,16 @@ if (stonecutter.current.isActive) loom {
     }
 }
 
+
 java {
     withSourcesJar()
 
-    sourceCompatibility = JavaVersion.VERSION_16
-    targetCompatibility = JavaVersion.VERSION_16
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 tasks.jar {
