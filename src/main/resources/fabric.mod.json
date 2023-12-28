@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "${id}",
+  "id": "worldrenderer",
   "version": "${mod_version}",
-  "name": "${display}",
+  "name": "World Renderer",
   "description": "",
   "authors": [
     "KikuGie",
@@ -19,7 +19,6 @@
     "worldrenderer.mixins.json"
   ],
   "depends": {
-    "minecraft": "${target_minecraft}",
-    "fabric-api": "*"
+    "minecraft": "${target_minecraft}"
   }
 }

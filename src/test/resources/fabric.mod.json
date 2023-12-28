@@ -8,12 +8,13 @@
     "KikuGie"
   ],
   "license": "MIT",
-  "mixins": [
-  ],
   "environment": "*",
   "entrypoints": {
     "main": [
-      "dev.kikugie.testmod.ModInit"
+      {
+        "adapter": "kotlin",
+        "value": "dev.kikugie.testmod.ModInit"
+      }
     ]
   }
 }
