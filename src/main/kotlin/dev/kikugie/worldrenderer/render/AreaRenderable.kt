@@ -11,12 +11,17 @@ import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.joml.Vector4f
 
-class AreaRenderable(
+open class AreaRenderable(
     val mesh: WorldMesh,
-    override val properties: RenderPropertyBundle
+    override val properties: RenderPropertyBundle,
+    private val preRender: () -> Unit = {},
+    private val postRender: () -> Unit = {}
 ) : Renderable {
     private val client = MinecraftClient.getInstance()
     private val size = mesh.end.subtract(mesh.origin).add(1, 1, 1)
+
+    override fun prepare() = preRender()
+    override fun cleanUp() = postRender()
     override fun emitVertices(matrices: MatrixStack, vertexConsumers: VertexConsumerProvider, tickDelta: Float) {
         if (!mesh.canRender) return
 

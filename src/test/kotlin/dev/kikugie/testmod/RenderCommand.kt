@@ -53,7 +53,7 @@ object RenderCommand {
                 end = posE
                 camera = Vec3d(1000.0, 0.0, 0.0)
                 entities = {
-                    client.world!!.getOtherEntities(null, Box(posO, posE.add(1, 1, 1)))
+                    client.world!!.getOtherEntities(null, Box(Vec3d.of(posO), Vec3d.of(posE.add(1, 1, 1))))
                 }
             }.apply { scheduleRebuild() }
             val renderable = AreaRenderable(mesh, DefaultRenderProperties(500.0, 45.0, 30.0))

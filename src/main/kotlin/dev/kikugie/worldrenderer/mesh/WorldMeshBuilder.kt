@@ -172,7 +172,7 @@ class WorldMeshBuilder internal constructor(
             val translucentBuilder = builderStorage[RenderLayer.getTranslucent()]
             /*? if >=1.20 {*//*
             translucentBuilder?.setSorter(
-                VertexSorter.byDistance(
+                com.mojang.blaze3d.systems.VertexSorter.byDistance(
                     camera.x.toFloat() - origin.x,
                     camera.y.toFloat() - origin.y,
                     camera.z.toFloat() - origin.z

@@ -3,13 +3,13 @@ package dev.kikugie.worldrenderer.property
 import net.minecraft.client.util.math.MatrixStack
 
 interface RenderPropertyBundle {
-    val xOffset: IntProperty
-    val yOffset: IntProperty
+    var xOffset: Int
+    var yOffset: Int
 
-    val scale: DoubleProperty
-    val rotation: DoubleProperty
-    val slant: DoubleProperty
-    val lightAngle: DoubleProperty
+    var scale: Double
+    var rotation: Double
+    var slant: Double
+    var lightAngle: Double
 
     fun applyToViewMatrix(matrices: MatrixStack)
 }

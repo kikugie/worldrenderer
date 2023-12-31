@@ -24,7 +24,8 @@ object RenderableDispatcher {
             val projectionMatrix = Matrix4f().setOrtho(-aspectRatio, aspectRatio, -1f, 1f, -1000f, 3000f)
 
             // Unproject to get the camera position for vertex sorting
-            Vector4f(0f, 0f, 0f, 1f).also {
+            /*? if >=1.20 {*//*
+            val camPos = Vector4f(0f, 0f, 0f, 1f).also {
                 it.mul(Matrix4f(projectionMatrix).invert()).mul(Matrix4f(peek().positionMatrix).invert())
                 val inverted = Matrix4f(projectionMatrix)
                 inverted.invert()
@@ -33,6 +34,7 @@ object RenderableDispatcher {
                 model.invert()
                 it.mul(model)
             }
+            *//*?} */
 
             RenderSystem.setProjectionMatrix(
                 projectionMatrix,
