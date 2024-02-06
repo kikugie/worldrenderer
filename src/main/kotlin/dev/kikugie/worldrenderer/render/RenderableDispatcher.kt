@@ -10,7 +10,7 @@ import java.util.function.Consumer
 
 object RenderableDispatcher {
     @Suppress("DEPRECATION")
-    fun draw(renderable: Renderable, aspectRatio: Float, tickDelta: Float, transformer: Consumer<MatrixStack?>) {
+    fun draw(renderable: Renderable, aspectRatio: Float, tickDelta: Float, transformer: Consumer<MatrixStack>) {
         renderable.prepare()
 
         // Prepare model view matrix

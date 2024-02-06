@@ -4,8 +4,7 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.RotationAxis
 
 class DefaultRenderProperties(maxScale: Double, defaultRotation: Double, defaultSlant: Double,
-    private val scaleDiv: Double = 10.0,
-    private val posDiv: Double = 26000.0
+    private val scaleDiv: Double = 10.0
 ) : RenderPropertyBundle {
     override var xOffset: Int by PropertyDelegate(IntProperty(0, Int.MIN_VALUE, Int.MAX_VALUE))
     override var yOffset: Int by PropertyDelegate(IntProperty(0, Int.MIN_VALUE, Int.MAX_VALUE))
@@ -17,7 +16,6 @@ class DefaultRenderProperties(maxScale: Double, defaultRotation: Double, default
     override fun applyToViewMatrix(matrices: MatrixStack) {
         with(matrices) {
             (scale / scaleDiv).toFloat().also { scale(it, it, it) }
-            translate(xOffset / posDiv, yOffset / -posDiv, 0.0)
             multiply(RotationAxis.POSITIVE_X.rotationDegrees(slant.toFloat()))
             multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotation.toFloat()))
         }

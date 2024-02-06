@@ -20,5 +20,6 @@
   ],
   "depends": {
     "minecraft": "${target_minecraft}"
-  }
+  },
+  "accessWidener": "worldrenderer.accesswidener"
 }

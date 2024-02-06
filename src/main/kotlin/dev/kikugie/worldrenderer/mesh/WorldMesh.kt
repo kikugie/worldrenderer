@@ -1,6 +1,7 @@
 package dev.kikugie.worldrenderer.mesh
 
 import com.mojang.blaze3d.systems.RenderSystem
+import dev.kikugie.worldrenderer.Reference
 import dev.kikugie.worldrenderer.util.EntitySupplier
 import net.minecraft.client.gl.VertexBuffer
 import net.minecraft.client.render.RenderLayer
@@ -31,11 +32,7 @@ class WorldMesh(
     val canRender: Boolean
         get() = state.canRender
     val progress: Double
-        get() = when {
-            canRender -> 1.0
-            state.isBuildStage -> 0.0
-            else -> builder?.progress ?: 0.0
-        }
+        get() = if (canRender) 1.0 else builder?.progress ?: 0.0
 
     @Synchronized
     fun scheduleRebuild(executor: Executor = Util.getMainWorkerExecutor()): WorldMeshBuilder {
@@ -50,7 +47,10 @@ class WorldMesh(
                 vertexStorage = it.vertexStorage
                 renderInfo = it.renderInfo
                 state = MeshState.READY
-            } else state = MeshState.CORRUPT
+            } else {
+                state = MeshState.CORRUPT
+                Reference.LOGGER.error("Mesh corrupted during build:\n", e)
+            }
         }.also { builder = it }
     }
 

@@ -80,7 +80,7 @@ open class AreaRenderable(
     }
 
     private fun drawLight(matrix: Matrix4f) {
-        val lightDirection = Vector4f((properties.lightAngle() / 90.0).toFloat(), .35F, 1F, 0F)
+        val lightDirection = Vector4f((properties.lightAngle / 90.0).toFloat(), .35F, 1F, 0F)
         val lightTransform = Matrix4f(matrix)
         lightTransform.invert()
         lightDirection.mul(lightTransform)
